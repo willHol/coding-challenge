@@ -1,7 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const data_json_1 = __importDefault(require("./data.json"));
-console.log(data_json_1.default.user);
+exports.calculateExpenses = exports.calculateRevenue = void 0;
+function calculateRevenue(data) {
+    return 0;
+}
+exports.calculateRevenue = calculateRevenue;
+function calculateExpenses(data) {
+    return 0;
+}
+exports.calculateExpenses = calculateExpenses;
