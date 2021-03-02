@@ -1,13 +1,24 @@
-import data from './data.json'
+import Data from './data.json'
 
-interface datum {
+interface Datum {
   account_category: string
+  total_value: number
 }
 
-export function calculateRevenue(data: datum[]): number {
-  return 0
+function accumulateCategory(category: string) {
+  return (total: number, datum: Datum) => {
+    if (datum.account_category === category) {
+      return total + datum.total_value
+    } else {
+      return total
+    }
+  }
 }
 
-export function calculateExpenses(data: datum[]): number {
-  return 0
+export function calculateRevenue(data: Datum[]): number {
+  return data.reduce(accumulateCategory('revenue'), 0)
+}
+
+export function calculateExpenses(data: Datum[]): number {
+  return data.reduce(accumulateCategory('expense'), 0)
 }
