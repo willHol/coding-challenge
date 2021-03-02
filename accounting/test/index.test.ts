@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { calculateRevenue, calculateExpenses } from '../src/index'
+import { calculateRevenue, calculateExpenses, calculateGrossProfitMargin } from '../src/index'
 import data from '../src/data.json'
 
 describe('Calculate revenue', () => {
@@ -15,5 +15,14 @@ describe('Calculate expenses', () => {
     const expenses = calculateExpenses(data.data)
     const expected = 36_529.68
     assert.strictEqual(expenses, expected)
+  })
+})
+
+describe('Calculate Gross Profit Margin', () => {
+  it('should return the correct gross profit margin', () => {
+    const revenue = calculateRevenue(data.data)
+    const margin = calculateGrossProfitMargin(data.data, revenue)
+    const expected = 0
+    assert.strictEqual(margin, expected)
   })
 })
