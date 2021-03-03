@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { calculateRevenue, calculateExpenses, calculateGrossProfitMargin } from '../src/index'
+import { calculateRevenue, calculateExpenses, calculateGrossProfitMargin, calculateNetProfitMargin } from '../src/index'
 import data from '../src/data.json'
 
 describe('Calculate revenue', () => {
@@ -23,6 +23,14 @@ describe('Calculate Gross Profit Margin', () => {
     const revenue = calculateRevenue(data.data)
     const margin = calculateGrossProfitMargin(data.data, revenue)
     const expected = 0
+    assert.strictEqual(margin, expected)
+  })
+})
+
+describe('Calculate Net Profit Margin', () => {
+  it('should return the correct net profit margin', () => {
+    const margin = calculateNetProfitMargin(data.data, 1000, 100)
+    const expected = 0.9
     assert.strictEqual(margin, expected)
   })
 })

@@ -31,7 +31,10 @@ export function calculateExpenses(data: Datum[]): number {
   )
 }
 
-export function calculateGrossProfitMargin(data: Datum[], revenue: number): number {
+// eslint-disable-next-line prettier/prettier
+export function calculateGrossProfitMargin(data: Datum[], revenue?: number ): number {
+  if (!revenue) revenue = calculateRevenue(data)
+
   const total = data.reduce(
     accumulateFiltering((datum) => {
       return datum.account_type === 'sales' && datum.value_type === 'debit'
@@ -39,4 +42,12 @@ export function calculateGrossProfitMargin(data: Datum[], revenue: number): numb
     0,
   )
   return total / revenue
+}
+
+// eslint-disable-next-line prettier/prettier
+export function calculateNetProfitMargin(data: Datum[], revenue?: number, expenses?: number,): number {
+  if (!revenue) revenue = calculateRevenue(data)
+  if (!expenses) expenses = calculateExpenses(data)
+
+  return (revenue - expenses) / revenue
 }
