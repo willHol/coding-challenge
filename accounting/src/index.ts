@@ -1,4 +1,4 @@
-import Data from './data.json'
+import data from './data.json'
 
 interface Datum {
   account_category: string
@@ -51,3 +51,97 @@ export function calculateNetProfitMargin(data: Datum[], revenue?: number, expens
 
   return (revenue - expenses) / revenue
 }
+
+export function calculateWorkingCapitalRatio(data: Datum[]): number {
+  const aDebits = data.reduce(
+    accumulateFiltering((datum) => {
+      return (
+        datum.account_category === 'assets' &&
+        datum.value_type === 'debit' &&
+        (datum.account_type === 'current' ||
+          datum.account_type === 'bank' ||
+          datum.account_type === 'current_accounts_receivable')
+      )
+    }),
+    0,
+  )
+
+  const aCredits = data.reduce(
+    accumulateFiltering((datum) => {
+      return (
+        datum.account_category === 'assets' &&
+        datum.value_type === 'credit' &&
+        (datum.account_type === 'current' ||
+          datum.account_type === 'bank' ||
+          datum.account_type === 'current_accounts_receivable')
+      )
+    }),
+    0,
+  )
+
+  const assets = aDebits - aCredits
+
+  const lDebits = data.reduce(
+    accumulateFiltering((datum) => {
+      return (
+        datum.account_category === 'liability' &&
+        datum.value_type === 'credit' &&
+        (datum.account_type === 'current' ||
+          datum.account_type === 'current_accounts_payable')
+      )
+    }),
+    0,
+  )
+
+  const lCredits = data.reduce(
+    accumulateFiltering((datum) => {
+      return (
+        datum.account_category === 'liability' &&
+        datum.value_type === 'debit' &&
+        (datum.account_type === 'current' ||
+          datum.account_type === 'current_accounts_payable')
+      )
+    }),
+    0,
+  )
+
+  const liablities = lDebits - lCredits
+
+  return assets / liablities
+}
+
+export function print() {
+  const formatMoney = (sum: number) => {
+    const string = sum.toLocaleString()
+    const index = string.indexOf('.')
+    if (index > -1) {
+      return string.slice(0, string.indexOf('.'))
+    } else {
+      return string
+    }
+  }
+
+  const formatPercentage = (perc: number) => {
+    return (perc * 100).toFixed(1)
+  }
+
+  console.log(`Revenue: $${formatMoney(calculateRevenue(data.data))}`)
+  console.log(`Expenses: $${formatMoney(calculateExpenses(data.data))}`)
+  console.log(
+    `Gross Profit Margin: ${formatPercentage(
+      calculateGrossProfitMargin(data.data),
+    )}%`,
+  )
+  console.log(
+    `Net Profit Margin: ${formatPercentage(
+      calculateNetProfitMargin(data.data),
+    )}%`,
+  )
+  console.log(
+    `Working Capital Ratio: ${formatPercentage(
+      calculateWorkingCapitalRatio(data.data),
+    )}%`,
+  )
+}
+
+print()
